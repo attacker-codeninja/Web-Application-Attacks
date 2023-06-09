@@ -12,9 +12,43 @@ app.secret_key = 'password-test'
 def home():
     return render_template('index.html')
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        try:
+            email = request.form['email']
+            password = request.form['password']
+
+            # Connect to the database and retrieve the user
+            db = mysql.connector.connect(
+                host='db',
+                user='myuser',
+                password='mypassword',
+                database='mydatabase'
+            )
+            cursor = db.cursor()
+            query = "SELECT * FROM users WHERE email = %s AND password = %s"
+            values = (email, password)
+            cursor.execute(query, values)
+            user = cursor.fetchone()
+
+            # Close the connection
+            db.close()
+
+            if user:
+                # Redirect to the personalized home page
+                return redirect(url_for('home', name=user[1], email=user[2]))
+            else:
+                flash("Invalid email or password. Please try again.")
+                return redirect(url_for('login'))
+
+        except Exception as e:
+            # Log the error
+            logging.error(f"Error during login: {str(e)}")
+            flash("An error occurred during login. Please try again later.")
+
     return render_template('login.html')
+
 
 
 @app.route('/register', methods=['GET', 'POST'])

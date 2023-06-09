@@ -45,31 +45,37 @@
     <p>This is the login page</p>
   </main>
 
-
   <!-- Login Form -->
   <main class="container mt-5">
     <h1>Login</h1>
-    <form>
+    <form method="POST" action="/login">
       <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="email" aria-describedby="emailHelp" required>
+        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" required>
         <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" required>
+        <input type="password" class="form-control" id="password" name="password" required>
       </div>
       <button type="submit" class="btn btn-primary">Login</button>
       <a href="/register" class="btn btn-link">Register</a> <!-- Add registration button -->
     </form>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-danger" role="alert" id="flash-message">
+          {{ messages[0] }}
+        </div>
+        <script>
+          setTimeout(function() {
+            var flashMessage = document.getElementById('flash-message');
+            flashMessage.style.display = 'none';
+          }, 5000);  // Delay in milliseconds (5 seconds in this example)
+        </script>
+      {% endif %}
+    {% endwith %}
   </main>
 
   <!-- Bootstrap JavaScript dependencies (jQuery and Popper.js) -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script>
-  <!-- Bootstrap JS -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+  <script src="https://code.jquery.com/jquery-3.6.
