@@ -22,14 +22,16 @@ Choose your Linux distribution from the list and follow the instructions provide
 After installing Docker, you can verify the installation by opening a terminal or command prompt and running the following command:
 ````
 ## Basic Demo
+### Installing git on Windows via powershell cmd prompt
 ````
 winget install --id Git.Git -e --source winget
 ````
+### Cloning this git repository
 ````
 git clone https://github.com/xsudoxx/Web-Application-Attacks.git
 cd Web-Application-Attacks
 ````
-
+### building our docker container and running it
 ````
 docker build -t myapp .
 docker run -p 5000:5000 myapp
