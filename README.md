@@ -30,6 +30,7 @@ https://git-scm.com/download/win
 ````
 git clone https://github.com/xsudoxx/Web-Application-Attacks.git
 cd Web-Application-Attacks
+cd Demo
 ````
 ### building our docker container and running it
 ````
