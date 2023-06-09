@@ -23,6 +23,9 @@ After installing Docker, you can verify the installation by opening a terminal o
 ````
 ## Basic Demo
 ````
+winget install --id Git.Git -e --source winget
+````
+````
 git clone https://github.com/xsudoxx/Web-Application-Attacks.git
 cd Web-Application-Attacks
 ````
