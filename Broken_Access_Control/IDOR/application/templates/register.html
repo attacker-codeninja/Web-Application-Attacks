@@ -45,22 +45,38 @@
     <form method='POST' action="/register">
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" required>
+        <input type="text" class="form-control" id="name" name="name" required>
       </div>
       <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="email" required>
+        <input type="email" class="form-control" id="email" name="email" required>
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" required>
+        <input type="password" class="form-control" id="password" name="password" required>
       </div>
       <div class="mb-3">
         <label for="confirmPassword" class="form-label">Confirm Password</label>
-        <input type="password" class="form-control" id="confirmPassword" required>
+        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
       </div>
       <button type="submit" class="btn btn-primary">Register</button>
     </form>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-danger" role="alert" id="flash-message">
+      {{ messages[0] }}
+        </div>
+        <script>
+          setTimeout(function() {
+            var flashMessage = document.getElementById('flash-message');
+            flashMessage.style.display = 'none';
+          }, 5000);  // Delay in milliseconds (5 seconds in this example)
+        </script>
+    {% endif %}
+  {% endwith %}
+    
+    
   </main>
 
   <!-- Bootstrap JS -->
