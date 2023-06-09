@@ -10,20 +10,6 @@ db = mysql.connector.connect(
     password='mypassword',
     database='mydatabase'
 )
-# Create a table
-cursor = db.cursor()
-cursor.execute('''
-    CREATE TABLE users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255),
-        email VARCHAR(255),
-        password VARCHAR(255)
-    )
-''')
-
-# Commit the changes and close the connection
-db.commit()
-db.close()
 
 @app.route('/')
 def home():
@@ -33,22 +19,21 @@ def home():
 def login():
     return render_template('login.html')
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
         password = request.form['password']
 
-        #insert the user into the database
-
+        # Insert the user into the database
         cursor = db.cursor()
-        query = "INSERT INTO users (name,email,password) VALUES (%s, %s, %s)"
-        values = (name,email,password)
+        query = "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)"
+        values = (name, email, password)
         cursor.execute(query, values)
         db.commit()
 
-        return "Registration succesful"
+        return "Registration successful"
 
     return render_template('register.html')
 
