@@ -24,7 +24,7 @@ After installing Docker, you can verify the installation by opening a terminal o
 ## Basic Demo
 ### Installing git on Windows via powershell cmd prompt
 ````
-[winget install --id Git.Git -e --source winget](https://git-scm.com/download/win)
+https://git-scm.com/download/win
 ````
 ### Cloning this git repository
 ````
