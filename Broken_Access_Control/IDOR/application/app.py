@@ -37,7 +37,7 @@ def login():
 
             if user:
                 # Redirect to the personalized home page
-                return redirect(url_for('home', name=user[1], email=user[2]))
+                return redirect(url_for('user_home', name=user[1], email=user[2]))
             else:
                 flash("Invalid email or password. Please try again.")
                 return redirect(url_for('login'))
