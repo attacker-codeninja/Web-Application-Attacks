@@ -23,7 +23,8 @@ After installing Docker, you can verify the installation by opening a terminal o
 ````
 ## Basic Demo
 ````
-https://github.com/xsudoxx/Web-Application-Attacks.git
+git clone https://github.com/xsudoxx/Web-Application-Attacks.git
+cd Web-Application-Attacks
 ````
 
 ````
