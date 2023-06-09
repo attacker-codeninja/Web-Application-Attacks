@@ -23,3 +23,8 @@ In computer systems, IDOR happens when someone finds a way to access or modify i
 To prevent IDOR, it's important for the computer system to have strong security measures. Just like your secret clubhouse needs a lock on each room to keep people out, computer systems need proper controls and checks to make sure that only authorized users can access the right information.
 
 So, in simple terms, IDOR is when someone finds a way to access something they shouldn't be able to, just like sneaking into a restricted room in a secret clubhouse. It's important to have good security measures in place to protect against IDOR and keep things safe and private.
+## Setup
+````
+docker build -t idor .
+docker run -p 5000:5000 idor 
+````
