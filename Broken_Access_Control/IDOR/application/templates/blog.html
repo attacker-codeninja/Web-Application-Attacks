@@ -43,21 +43,7 @@
   <main class="container mt-5">
     <h1>Blog Page</h1>
     <p>This is a blog page.</p>
-    <div class="row">
-      {% for post in blog_posts %}
-      <div class="col-md-6">
-        <div class="card mb-3">
-          <div class="card-body">
-            <h5 class="card-title">{{ post.title }}</h5>
-            <p class="card-text">{{ post.content }}</p>
-            <p class="card-text">Posted by: {{ post.user_name }}</p>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
   </main>
-  
 
   <!-- Bootstrap JS -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>

@@ -104,8 +104,7 @@ def user_home(name):
 
 @app.route('/blog')
 def blog():
-    blog_posts = get_public_blog_posts()  # Function to retrieve public blog posts from the database
-    return render_template('blog.html', blog_posts=blog_posts)
+    return render_template('blog.html')
 
 @app.route('/contact')
 def contact():
