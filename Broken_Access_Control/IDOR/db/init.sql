@@ -7,8 +7,9 @@ CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
     email VARCHAR(255),
-    password VARCHAR(255)
+    password VARCHAR(255),
+    is_admin BOOLEAN DEFAULT 0
 );
 
-INSERT INTO users (name, email, password)
-VALUES ('Admin', 'Admin@hackme.com', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3');
+INSERT INTO users (name, email, password,role,is_admin)
+VALUES ('Admin', 'Admin@hackme.com', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3',1);
