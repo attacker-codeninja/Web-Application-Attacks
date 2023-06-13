@@ -26,11 +26,30 @@ So, in simple terms, IDOR is when someone finds a way to access something they s
 ## Setup
 ### Initial
 ````
-docker build -t idor .
-docker run -p 5000:5000 idor 
+Open Docker and have it running
 ````
-### Updates being made
+
+![image](https://github.com/xsudoxx/Web-Application-Attacks/assets/127046919/e9ca8dd6-42f5-48d4-9758-859c84e2a2ce)
+
 ````
-docker build -t idor:v0.1 .
-docker run -p 5000:5000 idor:v0.1
+Go into [VSCode]
+Open up [Terminal]
+git clone https://github.com/xsudoxx/Web-Application-Attacks.git
+cd Web-Application-Attacks
+cd Broken_Access_Control
+cd IDOR
 ````
+
+## Clear the DB
+````
+docker volume rm idor_db-data
+````
+## Running the vulnerable application
+````
+docker-compose up
+````
+## Shutting down the vulnerable application
+````
+docker-compose down
+````
+
