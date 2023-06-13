@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request,redirect,url_for,flash
-import mysql.connector
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import logging
+import mysql.connector
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -36,7 +36,17 @@ def login():
             db.close()
 
             if user:
-                # Redirect to the personalized home page
+                # Check if the user is an admin
+                session['name'] = user[1]
+                if user[4] == 'admin':
+                    # Store the admin status in the session
+                    session['is_admin'] = True
+                    session['email'] = user[2]  
+
+                    # Redirect the admin user to the admin.html page
+                    return redirect(url_for('admin'))
+
+                # Redirect to the personalized home page for regular users
                 return redirect(url_for('user_home', name=user[1], email=user[2]))
             else:
                 flash("Invalid email or password. Please try again.")
@@ -76,10 +86,10 @@ def register():
                 flash("User already registered. Please log in.")
                 db.close()
                 return redirect(url_for('login'))
-            
-            # Insert the user into the database
-            query = "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)"
-            values = (name, email, password)
+
+            # Insert the user into the database with the 'user' role
+            query = "INSERT INTO users (name, email, password, role) VALUES (%s, %s, %s, %s)"
+            values = (name, email, password, 'user')
             cursor.execute(query, values)
             db.commit()
             db.close()
@@ -97,10 +107,27 @@ def register():
 
 
 
+
 @app.route('/user/<name>')
 def user_home(name):
     email = request.args.get('email')
     return render_template('home.html', name=name, email=email)
+
+@app.route('/admin')
+def admin():
+    # Check if the user is logged in as an admin
+    if session.get('is_admin'):
+        # Get the admin's email and name from the session or database
+        email = session['email']  # Update this with the key used to store the email in the session
+        name = session['name']  # Update this with the key used to store the name in the session
+
+        # Render the admin.html template and pass the email and name as template variables
+        return render_template('admin.html', email=email, name=name,is_admin=True)
+    else:
+        # Redirect non-admin users to a different page or display an error message
+        return redirect(url_for('login'))
+
+
 
 @app.route('/blog')
 def blog():
