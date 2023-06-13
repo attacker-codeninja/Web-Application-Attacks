@@ -36,18 +36,22 @@ def login():
             db.close()
 
             if user:
-                # Check if the user is an admin
+                # Store the user's information in the session
+                session['user_id'] = user[0]
                 session['name'] = user[1]
+                session['email'] = user[2]
+                session['password'] = user[3]
+
                 if user[4] == 'admin':
                     # Store the admin status in the session
                     session['is_admin'] = True
-                    session['email'] = user[2]  
 
                     # Redirect the admin user to the admin.html page
                     return redirect(url_for('admin'))
 
-                # Redirect to the personalized home page for regular users
-                return redirect(url_for('user_home', name=user[1], email=user[2]))
+                # Redirect to the user's home page
+                return redirect(url_for('user_home', user_id=user[0]))
+
             else:
                 flash("Invalid email or password. Please try again.")
                 return redirect(url_for('login'))
@@ -58,6 +62,8 @@ def login():
             flash("An error occurred during login. Please try again later.")
 
     return render_template('login.html')
+
+
 
 
 
@@ -107,11 +113,34 @@ def register():
 
 
 
+@app.route('/user/<int:user_id>')
+def user_home(user_id):
+    # Retrieve user information from the database based on the user_id
+    db = mysql.connector.connect(
+        host='db',
+        user='myuser',
+        password='mypassword',
+        database='mydatabase'
+    )
+    cursor = db.cursor(dictionary=True)
+    query = "SELECT * FROM users WHERE id = %s"
+    values = (user_id,)
+    cursor.execute(query, values)
+    user = cursor.fetchone()
+    db.close()
 
-@app.route('/user/<name>')
-def user_home(name):
-    email = request.args.get('email')
-    return render_template('home.html', name=name, email=email)
+    if user:
+        name = user['name']
+        email = user['email']
+        password = user['password']
+
+        return render_template('home.html', name=name, email=email, user_id=user_id, password=password)
+    else:
+        flash("User not found.")
+
+    return redirect(url_for('login'))
+
+
 
 @app.route('/admin')
 def admin():
