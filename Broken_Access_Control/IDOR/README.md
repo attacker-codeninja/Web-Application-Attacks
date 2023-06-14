@@ -25,7 +25,7 @@ To prevent IDOR, it's important for the computer system to have strong security 
 So, in simple terms, IDOR is when someone finds a way to access something they shouldn't be able to, just like sneaking into a restricted room in a secret clubhouse. It's important to have good security measures in place to protect against IDOR and keep things safe and private.
 ````
 ## Setup
-### Initial
+### Option #1
 ````
 Open Docker and have it running
 ````
@@ -41,17 +41,28 @@ cd Broken_Access_Control
 cd IDOR
 ````
 
-## Clear the DB
+### Clear the DB
 ````
 docker volume rm idor_db-data
 ````
-## Running the vulnerable application
+### Running the vulnerable application
 ````
 docker-compose up
 ````
-## Shutting down the vulnerable application
+### Shutting down the vulnerable application
 ````
 docker-compose down
+````
+### Option #2
+````
+Open [Docker Desktop]
+Open [VSCODE]
+(If you already have Docker Extension added please continue, if not please install it)
+Find [docker-compose.yml] & [right-click on the file] & [click][Compose Up]
+Hit [Enter]
+ctrl + c
+docker-compose down
+docker-compose up
 ````
 
 # Code Review
