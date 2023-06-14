@@ -101,3 +101,39 @@ def user_home(user_id):
     return redirect(url_for('login'))
 
 ````
+
+# Cyber Security Skills Learned
+## Authentication
+````
+Authentication is the process of verifying the identity of a user or entity to ensure that they are who they claim to be. In the context of computer systems and online services, authentication is crucial for controlling access to resources and protecting sensitive information.
+````
+### Example 
+````
+User provides credentials: The user submits their identification information, such as a username or email, and a secret password.
+````
+## IDOR
+````
+IDOR stands for Insecure Direct Object Reference. It is a security vulnerability that occurs when an application allows direct access to internal implementation objects or resources without proper authorization checks. In other words, an IDOR vulnerability enables an attacker to access or manipulate sensitive data by modifying a parameter or identifier that directly refers to an internal object or resource.
+````
+### Example
+````
+Let's say you have an application that displays user information based on a user ID. The application uses a URL like https://example.com/user?user_id=123 to fetch and display the user's data. In this case, the user_id parameter is directly used to retrieve the user's information from the backend database.
+
+If the application fails to properly validate or authorize the user's access to the requested user ID, an attacker could potentially modify the user_id parameter in the URL to access another user's information. For example, the attacker could change the URL to https://example.com/user?user_id=456 to view the data of a different user without proper authorization.
+````
+## Access Control
+````
+The main goal of access control is to protect sensitive information, maintain data confidentiality, integrity, and availability, and prevent unauthorized access or misuse of resources. It helps organizations enforce security policies, comply with regulations, and safeguard their systems and data from both internal and external threats.
+````
+### Examples
+````
+Role-Based Access Control (RBAC): Access is granted based on predefined roles assigned to subjects, and permissions are associated with these roles.
+
+Attribute-Based Access Control (ABAC): Access is granted based on evaluating attributes associated with subjects, objects, and environmental conditions.
+
+Mandatory Access Control (MAC): Access decisions are enforced based on security labels or classifications assigned to subjects and objects.
+
+Discretionary Access Control (DAC): Access decisions are determined by the owner of the resource, who grants or revokes permissions.
+
+Rule-Based Access Control: Access decisions are made based on a set of predefined rules or policies.
+````
