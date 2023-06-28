@@ -172,37 +172,85 @@ To prevent XSS attacks, it's important to properly sanitize and encode user inpu
 ````
 
 # Cyber Security Skills Learned
-## Authentication
+## Framework Auto Encoding
 ````
-Authentication is the process of verifying the identity of a user or entity to ensure that they are who they claim to be. In the context of computer systems and online services, authentication is crucial for controlling access to resources and protecting sensitive information.
+Flask provides some built-in features and libraries that can help mitigate XSS vulnerabilities:
+
+Template Engine: Flask uses a template engine, such as Jinja, which has built-in automatic escaping. By default, Jinja escapes all content rendered in templates unless explicitly marked as safe using the safe filter. This helps prevent unintentional XSS vulnerabilities by automatically escaping user input.
+
+Manual Escaping: Flask provides a Markup class that allows you to manually mark a string as safe when you are confident that it does not contain any malicious content. However, it is generally recommended to use the safe filter within templates to mark specific variables as safe, instead of relying on manual escaping.
 ````
 ### Example 
 ````
-User provides credentials: The user submits their identification information, such as a username or email, and a secret password.
+<p>{{ result.message | safe }}</p>
+{% autoescape true %}
+{% endautoescape %}
 ````
-## IDOR
+## XSS
 ````
-IDOR stands for Insecure Direct Object Reference. It is a security vulnerability that occurs when an application allows direct access to internal implementation objects or resources without proper authorization checks. In other words, an IDOR vulnerability enables an attacker to access or manipulate sensitive data by modifying a parameter or identifier that directly refers to an internal object or resource.
-````
-### Example
-````
-Let's say you have an application that displays user information based on a user ID. The application uses a URL like https://example.com/user?user_id=123 to fetch and display the user's data. In this case, the user_id parameter is directly used to retrieve the user's information from the backend database.
+XSS attacks can be classified into three main types:
 
-If the application fails to properly validate or authorize the user's access to the requested user ID, an attacker could potentially modify the user_id parameter in the URL to access another user's information. For example, the attacker could change the URL to https://example.com/user?user_id=456 to view the data of a different user without proper authorization.
+Stored XSS: The injected malicious code is permanently stored on the target server, often within a database. Whenever a user requests the affected page, the stored script is retrieved and executed in the user's browser.
+
+Reflected XSS: The injected script is embedded in a URL or other input fields and is reflected back to the user by the server without proper sanitization. The script is executed in the victim's browser when they click on a malicious link or submit a form.
+
+DOM-based XSS: This type of XSS occurs when the vulnerability is within the client-side JavaScript code, manipulating the Document Object Model (DOM) of a web page. The malicious script modifies the page's structure or behavior, leading to unexpected consequences and potential security risks.
+
+The impact of XSS attacks can be severe, including:
+
+Theft of sensitive user data, such as login credentials, personal information, or cookies.
+Session hijacking, where the attacker gains unauthorized access to a user's active session.
+Defacement of websites by modifying the content or layout.
+Distribution of malware or phishing attacks through infected web pages.
+Social engineering attacks to deceive users or gain their trust.
+To prevent XSS attacks, web developers should implement proper input validation and output encoding/sanitization techniques. This includes:
+
+Validating and filtering user input to ensure it conforms to the expected format.
+Encoding user-generated content before displaying it on web pages to prevent script execution.
+Implementing Content Security Policy (CSP) to restrict the types of content that can be loaded on a page.
+Using frameworks and libraries that automatically handle input sanitization and output encoding.
+Educating developers about secure coding practices and the risks associated with XSS vulnerabilities.
+By taking these precautions, web applications can mitigate the risk of XSS attacks and ensure the safety of their users' browsing experience.
 ````
-## Access Control
+### Example payloads
 ````
-The main goal of access control is to protect sensitive information, maintain data confidentiality, integrity, and availability, and prevent unauthorized access or misuse of resources. It helps organizations enforce security policies, comply with regulations, and safeguard their systems and data from both internal and external threats.
+https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS%20Injection
+````
+## Sanatizing Code
+````
+Sanitizing code, in the context of cybersecurity, refers to the process of cleaning and validating user input to remove or neutralize potentially malicious or harmful elements. It is an essential practice to prevent code injection attacks, specifically cross-site scripting (XSS) attacks.
 ````
 ### Examples
+#### PHP
 ````
-Role-Based Access Control (RBAC): Access is granted based on predefined roles assigned to subjects, and permissions are associated with these roles.
-
-Attribute-Based Access Control (ABAC): Access is granted based on evaluating attributes associated with subjects, objects, and environmental conditions.
-
-Mandatory Access Control (MAC): Access decisions are enforced based on security labels or classifications assigned to subjects and objects.
-
-Discretionary Access Control (DAC): Access decisions are determined by the owner of the resource, who grants or revokes permissions.
-
-Rule-Based Access Control: Access decisions are made based on a set of predefined rules or policies.
+$input = '<script>alert("XSS Attack");</script>';
+$sanitizedInput = htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
+echo $sanitizedInput;
 ````
+#### Python (Django framework)
+````
+{% autoescape on %}
+  {{ user_input }}
+{% endautoescape %}
+````
+#### JavaScript
+````
+var user_input = '<script>alert("XSS Attack");</script>';
+var sanitizedInput = DOMPurify.sanitize(user_input);
+document.getElementById('output').innerHTML = sanitizedInput;
+````
+#### Ruby on Rails
+````
+user_input = '<script>alert("XSS Attack");</script>'
+sanitized_input = sanitize(user_input, tags: [])
+puts sanitized_input
+````
+#### Java (Spring framework)
+````
+import org.springframework.web.util.HtmlUtils;
+
+String userInput = "<script>alert(\"XSS Attack\");</script>";
+String sanitizedInput = HtmlUtils.htmlEscape(userInput);
+System.out.println(sanitizedInput);
+````
+
