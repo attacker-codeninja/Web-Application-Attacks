@@ -10,19 +10,17 @@ Insecure direct object references (IDOR) are a type of access control vulnerabil
 
 ## chatgpt summary
 ````
-Insecure Direct Object References (IDOR): A direct object reference occurs when an application exposes a reference to an internal implementation object, such as a file or database record. If the application does not properly validate and enforce authorization checks on these references, an attacker may be able to manipulate the references and access unauthorized resources.
+Cross-Site Scripting (XSS) is a type of web security vulnerability that allows attackers to inject malicious scripts into web pages viewed by other users. It occurs when a web application does not properly validate or sanitize user-generated input before displaying it on a page.
 ````
 ## Explaining this to a 5th grader
 ````
-Imagine you and your friends have a secret clubhouse with different rooms. Each room has a number on it, like Room 1, Room 2, and so on. You have a rule that says only certain friends are allowed to enter specific rooms.
+You know how when you visit websites, you can type in things like your name or a message? Well, sometimes bad people try to trick the website and make it show things it shouldn't. They do this by putting special codes or scripts in those input fields that the website doesn't check properly.
 
-Now, let's say you have a friend named Alex, and Alex is only allowed to enter Room 3. But one day, Alex figures out a way to sneak into Room 4, even though they are not supposed to be there. This is called an Insecure Direct Object Reference, or IDOR, because Alex directly accessed a room they were not authorized to enter.
+When the website shows the things you typed or submitted, it doesn't realize that there might be dangerous scripts hidden in there. So, when other people visit the website and see those things, their computers try to run those scripts without even knowing it. That's when the bad people can do bad things!
 
-In computer systems, IDOR happens when someone finds a way to access or modify information they are not supposed to have access to. It's like sneaking into a restricted area of a website or an application and seeing things that should be hidden.
+For example, they could make a script that steals people's passwords or personal information, or they could even make the website look different and confuse people. It's like a sneaky way of making the website do things it's not supposed to.
 
-To prevent IDOR, it's important for the computer system to have strong security measures. Just like your secret clubhouse needs a lock on each room to keep people out, computer systems need proper controls and checks to make sure that only authorized users can access the right information.
-
-So, in simple terms, IDOR is when someone finds a way to access something they shouldn't be able to, just like sneaking into a restricted room in a secret clubhouse. It's important to have good security measures in place to protect against IDOR and keep things safe and private.
+To stay safe from XSS, it's important for websites to be very careful about what people can type or submit. They need to check everything properly and make sure it doesn't have any hidden codes or scripts. That way, everyone can use websites without worrying about their information or computer being at risk.
 ````
 ## Setup
 ### Option #1
