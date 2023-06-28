@@ -172,30 +172,8 @@ To prevent XSS attacks, it's important to properly sanitize and encode user inpu
 ````
 
 # Cyber Security Skills Learned
-## Framework Auto Encoding
-````
-Flask provides some built-in features and libraries that can help mitigate XSS vulnerabilities:
-
-Template Engine: Flask uses a template engine, such as Jinja, which has built-in automatic escaping. By default, Jinja escapes all content rendered in templates unless explicitly marked as safe using the safe filter. This helps prevent unintentional XSS vulnerabilities by automatically escaping user input.
-
-Manual Escaping: Flask provides a Markup class that allows you to manually mark a string as safe when you are confident that it does not contain any malicious content. However, it is generally recommended to use the safe filter within templates to mark specific variables as safe, instead of relying on manual escaping.
-````
-### Example 
-````
-<p>{{ result.message | safe }}</p>
-{% autoescape true %}
-{% endautoescape %}
-````
 ## XSS
 ````
-XSS attacks can be classified into three main types:
-
-Stored XSS: The injected malicious code is permanently stored on the target server, often within a database. Whenever a user requests the affected page, the stored script is retrieved and executed in the user's browser.
-
-Reflected XSS: The injected script is embedded in a URL or other input fields and is reflected back to the user by the server without proper sanitization. The script is executed in the victim's browser when they click on a malicious link or submit a form.
-
-DOM-based XSS: This type of XSS occurs when the vulnerability is within the client-side JavaScript code, manipulating the Document Object Model (DOM) of a web page. The malicious script modifies the page's structure or behavior, leading to unexpected consequences and potential security risks.
-
 The impact of XSS attacks can be severe, including:
 
 Theft of sensitive user data, such as login credentials, personal information, or cookies.
@@ -211,6 +189,16 @@ Implementing Content Security Policy (CSP) to restrict the types of content that
 Using frameworks and libraries that automatically handle input sanitization and output encoding.
 Educating developers about secure coding practices and the risks associated with XSS vulnerabilities.
 By taking these precautions, web applications can mitigate the risk of XSS attacks and ensure the safety of their users' browsing experience.
+````
+### Example
+````
+XSS attacks can be classified into three main types:
+
+Stored XSS: The injected malicious code is permanently stored on the target server, often within a database. Whenever a user requests the affected page, the stored script is retrieved and executed in the user's browser.
+
+Reflected XSS: The injected script is embedded in a URL or other input fields and is reflected back to the user by the server without proper sanitization. The script is executed in the victim's browser when they click on a malicious link or submit a form.
+
+DOM-based XSS: This type of XSS occurs when the vulnerability is within the client-side JavaScript code, manipulating the Document Object Model (DOM) of a web page. The malicious script modifies the page's structure or behavior, leading to unexpected consequences and potential security risks.
 ````
 ### Example payloads
 ````
