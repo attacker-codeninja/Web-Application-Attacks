@@ -74,51 +74,6 @@ resultsDiv.innerHTML = "<p>Showing results for: " + query + "</p>";
 ````
 ## Updated code
 ````
-<!DOCTYPE html>
-<html>
-<head>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
-  <title>Search Page</title>
-  <style>
-    .container {
-      margin-top: 40px;
-    }
-  </style>
-</head>
-<body>
-  <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="#">My Website</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/login">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/register">Register</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/blog">Blog</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/contact">Contact</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/search">Search</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  
   <div class="container">
     <h1>Welcome to our directory Page</h1>
 
@@ -170,9 +125,6 @@ resultsDiv.innerHTML = "<p>Showing results for: " + query + "</p>";
     resultsDiv.appendChild(textNode);
   }
 </script>
-
-</body>
-</html>
 ````
 ### Explanation
 ````
