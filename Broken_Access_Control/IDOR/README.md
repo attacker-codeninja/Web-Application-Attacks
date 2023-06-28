@@ -28,20 +28,21 @@ To stay safe from XSS, it's important for websites to be very careful about what
 Open Docker and have it running
 ````
 
-![image](https://github.com/xsudoxx/Web-Application-Attacks/assets/127046919/e9ca8dd6-42f5-48d4-9758-859c84e2a2ce)
+![image](https://github.com/xsudoxx/Web-Application-Attacks/assets/127046919/64924adc-80c4-4709-ab0f-e37e15eaae56)
+
 
 ````
 Go into [VSCode]
 Open up [Terminal]
 git clone https://github.com/xsudoxx/Web-Application-Attacks.git
 cd Web-Application-Attacks
-cd Broken_Access_Control
-cd IDOR
+cd Cross-Site-Scripting
+cd xss
 ````
 
 ### Clear the DB
 ````
-docker volume rm idor_db-data
+docker volume rm xss_db-data
 ````
 ### Running the vulnerable application
 ````
@@ -65,50 +66,109 @@ docker-compose up
 
 # Code Review
 ````
- It retrieves user information based on the user_id parameter without any additional authorization or access control checks.
+The code you provided is vulnerable to Cross-Site Scripting (XSS) attacks because it directly injects user input into the HTML without proper sanitization or validation.
 
-To address the IDOR vulnerability, you need to implement proper authorization and access control mechanisms. Here's an updated version of the code that includes authorization checks:
+Specifically, the vulnerable line is:
 
-In this updated code, it first checks if a user is logged in and compares the logged-in user's user_id with the requested user_id. Only if they match, it proceeds to retrieve and display the user's information. Otherwise, it displays an error message indicating unauthorized access.
+resultsDiv.innerHTML = "<p>Showing results for: " + query + "</p>";
 
-By implementing these authorization checks, you can mitigate the IDOR vulnerability and ensure that users can only access their own information.
+In this line, the query variable is concatenated directly into the HTML string without any sanitization or encoding. This means that if the user input contains HTML or JavaScript code, it will be rendered and executed as-is, allowing potential malicious code to be injected and executed within the page.
+
+To prevent XSS attacks, it's important to properly sanitize and encode user input before inserting it into the HTML. One way to do this is by using appropriate escaping functions or libraries provided by the framework you're using. In the case of Flask, you can use the |safe filter in Jinja2 templates to mark a variable as safe and prevent auto-escaping.
 ````
 ## Updated code
 ````
-@app.route('/user/<int:user_id>')
-def user_home(user_id):
-    if 'user_id' in session:
-        logged_in_user_id = session['user_id']
-        if logged_in_user_id == user_id:
-            # Retrieve user information from the database based on the user_id
-            db = mysql.connector.connect(
-                host='db',
-                user='myuser',
-                password='mypassword',
-                database='mydatabase'
-            )
-            cursor = db.cursor(dictionary=True)
-            query = "SELECT * FROM users WHERE id = %s"
-            values = (user_id,)
-            cursor.execute(query, values)
-            user = cursor.fetchone()
-            db.close()
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+  <title>Search Page</title>
+  <style>
+    .container {
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">My Website</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/register">Register</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/blog">Blog</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/search">Search</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  <div class="container">
+    <h1>Welcome to our directory Page</h1>
 
-            if user:
-                name = user['name']
-                email = user['email']
-                password = user['password']
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Search</h2>
+        <form method="POST" action="/search">
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="search-input" name="query">
+            <button class="btn btn-primary" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
-                return render_template('home.html', name=name, email=email, user_id=user_id, password=password)
-            else:
-                flash("User not found.")
-        else:
-            flash("Unauthorized access.")
-    else:
-        flash("Please log in to access this page.")
+    <h2>Search Results</h2>
+    <div id="search-results">
+      {% if results %}
+        {% for result in results %}
+          <div class="result-item">
+            <h3>{{ result.name }}</h3>
+            <p>{{ result.email }}</p>
+            <p>{{ result.message | safe }}</p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No results found for: {{ query }}</p>
+      {% endif %}
+    </div>
+  </div>
 
-    return redirect(url_for('login'))
+  <script>
+    function search() {
+      var query = document.getElementById("search-input").value;
+      var resultsDiv = document.getElementById("search-results");
 
+      // Properly sanitize and encode user input
+      var encodedQuery = document.createElement('div');
+      encodedQuery.textContent = query;
+      var sanitizedQuery = encodedQuery.innerHTML;
+
+      resultsDiv.innerHTML = "<p>Showing results for: " + sanitizedQuery + "</p>";
+    }
+  </script>
+</body>
+</html>
 ````
 
 # Cyber Security Skills Learned
