@@ -32,12 +32,34 @@ git clone https://github.com/xsudoxx/Web-Application-Attacks.git
 cd Web-Application-Attacks
 cd Demo
 ````
-### building our docker container and running it
+### Option #1 building our docker container and running it
 ````
+Open [Docker Desktop]
+Open [VSCODE]
+In [VSCODE] Open [Terminal]
 docker build -t myapp .
 docker run -p 5000:5000 myapp
 ````
 
+### Option #2 building our docker image in VSCODE
+````
+Open [VSCODE]
+On the left hand side find [Extensions]
+In [Extensions] search for "Docker" and install
+````
+
+![image](https://github.com/xsudoxx/Web-Application-Attacks/assets/127046919/ac84fb23-122a-4b96-bf7b-94f7c9c599f3)
+
+````
+Find [Dockerfile]
+[Right Click]
+Find "Build Image" and click on it
+Go to [Docker Desktop]
+Find your Image Name
+Run in [VSCODE][Terminal]
+docker run -p 5000:5000 YourImageNameFromDockerDesktop
+````
+## Demo Video
 
 https://github.com/xsudoxx/Web-Application-Attacks/assets/127046919/0829da71-5a19-456f-a7f7-48fbcb8315a3
 
