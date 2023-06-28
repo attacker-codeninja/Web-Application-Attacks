@@ -28,21 +28,20 @@ To stay safe from XSS, it's important for websites to be very careful about what
 Open Docker and have it running
 ````
 
-![image](https://github.com/xsudoxx/Web-Application-Attacks/assets/127046919/64924adc-80c4-4709-ab0f-e37e15eaae56)
-
+![image](https://github.com/xsudoxx/Web-Application-Attacks/assets/127046919/e9ca8dd6-42f5-48d4-9758-859c84e2a2ce)
 
 ````
 Go into [VSCode]
 Open up [Terminal]
 git clone https://github.com/xsudoxx/Web-Application-Attacks.git
 cd Web-Application-Attacks
-cd Cross-Site-Scripting
-cd xss
+cd Broken_Access_Control
+cd IDOR
 ````
 
 ### Clear the DB
 ````
-docker volume rm xss_db-data
+docker volume rm idor_db-data
 ````
 ### Running the vulnerable application
 ````
@@ -66,179 +65,84 @@ docker-compose up
 
 # Code Review
 ````
-The code you provided is vulnerable to Cross-Site Scripting (XSS) attacks because it directly injects user input into the HTML without proper sanitization or validation.
+ It retrieves user information based on the user_id parameter without any additional authorization or access control checks.
 
-Specifically, the vulnerable line is:
+To address the IDOR vulnerability, you need to implement proper authorization and access control mechanisms. Here's an updated version of the code that includes authorization checks:
 
-resultsDiv.innerHTML = "<p>Showing results for: " + query + "</p>";
+In this updated code, it first checks if a user is logged in and compares the logged-in user's user_id with the requested user_id. Only if they match, it proceeds to retrieve and display the user's information. Otherwise, it displays an error message indicating unauthorized access.
 
-In this line, the query variable is concatenated directly into the HTML string without any sanitization or encoding. This means that if the user input contains HTML or JavaScript code, it will be rendered and executed as-is, allowing potential malicious code to be injected and executed within the page.
-
-To prevent XSS attacks, it's important to properly sanitize and encode user input before inserting it into the HTML. One way to do this is by using appropriate escaping functions or libraries provided by the framework you're using. In the case of Flask, you can use the |safe filter in Jinja2 templates to mark a variable as safe and prevent auto-escaping.
+By implementing these authorization checks, you can mitigate the IDOR vulnerability and ensure that users can only access their own information.
 ````
 ## Updated code
 ````
-<!DOCTYPE html>
-<html>
-<head>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
-  <title>Search Page</title>
-  <style>
-    .container {
-      margin-top: 40px;
-    }
-  </style>
-</head>
-<body>
-  <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="#">My Website</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/login">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/register">Register</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/blog">Blog</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/contact">Contact</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/search">Search</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  
-  <div class="container">
-    <h1>Welcome to our directory Page</h1>
+@app.route('/user/<int:user_id>')
+def user_home(user_id):
+    if 'user_id' in session:
+        logged_in_user_id = session['user_id']
+        if logged_in_user_id == user_id:
+            # Retrieve user information from the database based on the user_id
+            db = mysql.connector.connect(
+                host='db',
+                user='myuser',
+                password='mypassword',
+                database='mydatabase'
+            )
+            cursor = db.cursor(dictionary=True)
+            query = "SELECT * FROM users WHERE id = %s"
+            values = (user_id,)
+            cursor.execute(query, values)
+            user = cursor.fetchone()
+            db.close()
 
-    <div class="row">
-      <div class="col-md-6">
-        <h2>Search</h2>
-        <form method="POST" action="/search">
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" id="search-input" name="query">
-            <button class="btn btn-primary" type="submit">Search</button>
-          </div>
-        </form>
-      </div>
-    </div>
+            if user:
+                name = user['name']
+                email = user['email']
+                password = user['password']
 
-    <h2>Search Results</h2>
-    <div id="search-results">
-      {% if results %}
-        {% for result in results %}
-          <div class="result-item">
-            <h3>{{ result.name }}</h3>
-            <p>{{ result.email }}</p>
-            <p>{{ result.message | safe }}</p>
-          </div>
-        {% endfor %}
-      {% else %}
-        <p>No results found for: {{ query }}</p>
-      {% endif %}
-    </div>
-  </div>
+                return render_template('home.html', name=name, email=email, user_id=user_id, password=password)
+            else:
+                flash("User not found.")
+        else:
+            flash("Unauthorized access.")
+    else:
+        flash("Please log in to access this page.")
 
-  <script>
-    function search() {
-      var query = document.getElementById("search-input").value;
-      var resultsDiv = document.getElementById("search-results");
+    return redirect(url_for('login'))
 
-      // Properly sanitize and encode user input
-      var encodedQuery = document.createElement('div');
-      encodedQuery.textContent = query;
-      var sanitizedQuery = encodedQuery.innerHTML;
-
-      resultsDiv.innerHTML = "<p>Showing results for: " + sanitizedQuery + "</p>";
-    }
-  </script>
-</body>
-</html>
 ````
 
 # Cyber Security Skills Learned
-## XSS
+## Authentication
 ````
-The impact of XSS attacks can be severe, including:
-
-Theft of sensitive user data, such as login credentials, personal information, or cookies.
-Session hijacking, where the attacker gains unauthorized access to a user's active session.
-Defacement of websites by modifying the content or layout.
-Distribution of malware or phishing attacks through infected web pages.
-Social engineering attacks to deceive users or gain their trust.
-To prevent XSS attacks, web developers should implement proper input validation and output encoding/sanitization techniques. This includes:
-
-Validating and filtering user input to ensure it conforms to the expected format.
-Encoding user-generated content before displaying it on web pages to prevent script execution.
-Implementing Content Security Policy (CSP) to restrict the types of content that can be loaded on a page.
-Using frameworks and libraries that automatically handle input sanitization and output encoding.
-Educating developers about secure coding practices and the risks associated with XSS vulnerabilities.
-By taking these precautions, web applications can mitigate the risk of XSS attacks and ensure the safety of their users' browsing experience.
+Authentication is the process of verifying the identity of a user or entity to ensure that they are who they claim to be. In the context of computer systems and online services, authentication is crucial for controlling access to resources and protecting sensitive information.
+````
+### Example 
+````
+User provides credentials: The user submits their identification information, such as a username or email, and a secret password.
+````
+## IDOR
+````
+IDOR stands for Insecure Direct Object Reference. It is a security vulnerability that occurs when an application allows direct access to internal implementation objects or resources without proper authorization checks. In other words, an IDOR vulnerability enables an attacker to access or manipulate sensitive data by modifying a parameter or identifier that directly refers to an internal object or resource.
 ````
 ### Example
 ````
-XSS attacks can be classified into three main types:
+Let's say you have an application that displays user information based on a user ID. The application uses a URL like https://example.com/user?user_id=123 to fetch and display the user's data. In this case, the user_id parameter is directly used to retrieve the user's information from the backend database.
 
-Stored XSS: The injected malicious code is permanently stored on the target server, often within a database. Whenever a user requests the affected page, the stored script is retrieved and executed in the user's browser.
-
-Reflected XSS: The injected script is embedded in a URL or other input fields and is reflected back to the user by the server without proper sanitization. The script is executed in the victim's browser when they click on a malicious link or submit a form.
-
-DOM-based XSS: This type of XSS occurs when the vulnerability is within the client-side JavaScript code, manipulating the Document Object Model (DOM) of a web page. The malicious script modifies the page's structure or behavior, leading to unexpected consequences and potential security risks.
+If the application fails to properly validate or authorize the user's access to the requested user ID, an attacker could potentially modify the user_id parameter in the URL to access another user's information. For example, the attacker could change the URL to https://example.com/user?user_id=456 to view the data of a different user without proper authorization.
 ````
-### Example payloads
+## Access Control
 ````
-https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS%20Injection
-````
-## Sanatizing Code
-````
-Sanitizing code, in the context of cybersecurity, refers to the process of cleaning and validating user input to remove or neutralize potentially malicious or harmful elements. It is an essential practice to prevent code injection attacks, specifically cross-site scripting (XSS) attacks.
+The main goal of access control is to protect sensitive information, maintain data confidentiality, integrity, and availability, and prevent unauthorized access or misuse of resources. It helps organizations enforce security policies, comply with regulations, and safeguard their systems and data from both internal and external threats.
 ````
 ### Examples
-#### PHP
 ````
-$input = '<script>alert("XSS Attack");</script>';
-$sanitizedInput = htmlspecialchars($input, ENT_QUOTES, 'UTF-8');
-echo $sanitizedInput;
-````
-#### Python (Django framework)
-````
-{% autoescape on %}
-  {{ user_input }}
-{% endautoescape %}
-````
-#### JavaScript
-````
-var user_input = '<script>alert("XSS Attack");</script>';
-var sanitizedInput = DOMPurify.sanitize(user_input);
-document.getElementById('output').innerHTML = sanitizedInput;
-````
-#### Ruby on Rails
-````
-user_input = '<script>alert("XSS Attack");</script>'
-sanitized_input = sanitize(user_input, tags: [])
-puts sanitized_input
-````
-#### Java (Spring framework)
-````
-import org.springframework.web.util.HtmlUtils;
+Role-Based Access Control (RBAC): Access is granted based on predefined roles assigned to subjects, and permissions are associated with these roles.
 
-String userInput = "<script>alert(\"XSS Attack\");</script>";
-String sanitizedInput = HtmlUtils.htmlEscape(userInput);
-System.out.println(sanitizedInput);
-````
+Attribute-Based Access Control (ABAC): Access is granted based on evaluating attributes associated with subjects, objects, and environmental conditions.
 
+Mandatory Access Control (MAC): Access decisions are enforced based on security labels or classifications assigned to subjects and objects.
+
+Discretionary Access Control (DAC): Access decisions are determined by the owner of the resource, who grants or revokes permissions.
+
+Rule-Based Access Control: Access decisions are made based on a set of predefined rules or policies.
+````
