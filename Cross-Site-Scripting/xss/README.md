@@ -72,7 +72,19 @@ Specifically, the vulnerable line is:
 
 resultsDiv.innerHTML = "<p>Showing results for: " + query + "</p>";
 ````
-## Updated code
+## Explanation
+````
+In this line, the query variable is concatenated directly into the HTML string without any sanitization or encoding. This means that if the user input contains HTML or JavaScript code, it will be rendered and executed as-is, allowing potential malicious code to be injected and executed within the page.
+
+To prevent XSS attacks, it's important to properly sanitize and encode user input before inserting it into the HTML. One way to do this is by using appropriate escaping functions or libraries provided by the framework you're using. In the case of Flask, you can use the |safe filter in Jinja2 templates to mark a variable as safe and prevent auto-escaping.
+
+In this updated code, the user input is properly sanitized by creating a new div element and setting its textContent to the user input. By retrieving the innerHTML of this div element, any potentially harmful HTML tags or characters are encoded.
+
+Instead of using innerHTML to directly inject the user input into the HTML, a new text node is created using document.createTextNode(). The sanitized query is appended as the text content of this text node, ensuring that it is treated as plain text and not interpreted as HTML or script code.
+
+By following this approach, the user input is properly sanitized and prevents any malicious code from being executed in the context of the webpage.
+````
+# Updated code
 ````
   <div class="container">
     <h1>Welcome to our directory Page</h1>
@@ -126,12 +138,8 @@ resultsDiv.innerHTML = "<p>Showing results for: " + query + "</p>";
   }
 </script>
 ````
-### Explanation
+## Explanation
 ````
-In this line, the query variable is concatenated directly into the HTML string without any sanitization or encoding. This means that if the user input contains HTML or JavaScript code, it will be rendered and executed as-is, allowing potential malicious code to be injected and executed within the page.
-
-To prevent XSS attacks, it's important to properly sanitize and encode user input before inserting it into the HTML. One way to do this is by using appropriate escaping functions or libraries provided by the framework you're using. In the case of Flask, you can use the |safe filter in Jinja2 templates to mark a variable as safe and prevent auto-escaping.
-
 In this updated code, the user input is properly sanitized by creating a new div element and setting its textContent to the user input. By retrieving the innerHTML of this div element, any potentially harmful HTML tags or characters are encoded.
 
 Instead of using innerHTML to directly inject the user input into the HTML, a new text node is created using document.createTextNode(). The sanitized query is appended as the text content of this text node, ensuring that it is treated as plain text and not interpreted as HTML or script code.
