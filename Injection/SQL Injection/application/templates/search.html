@@ -1,4 +1,4 @@
-{% autoescape false %}
+{% autoescape true %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -41,7 +41,7 @@
           <div class="result-item">
             <h3>{{ result.name }}</h3>
             <p>{{ result.email }}</p>
-            <p>{{ result.message }}</p>
+            <p>{{ result.message | safe }}</p>
           </div>
         {% endfor %}
       {% else %}
@@ -51,16 +51,25 @@
   </div>
 
   <script>
-    function search() {
-      var query = document.getElementById("search-input").value;
-      var resultsDiv = document.getElementById("search-results");
+  function search() {
+    var query = document.getElementById("search-input").value;
+    var resultsDiv = document.getElementById("search-results");
 
-      // Dynamically generate JavaScript code
-      var scriptTag = document.createElement("script");
-      scriptTag.textContent = 'alert("This is dynamically generated JavaScript code!");';
-      resultsDiv.appendChild(scriptTag);
-    }
-  </script>
+    // Properly sanitize and encode user input
+    var encodedQuery = document.createElement('div');
+    encodedQuery.textContent = query;
+    var sanitizedQuery = encodedQuery.innerHTML;
+
+    // Create a text node containing the sanitized query
+    var textNode = document.createTextNode("Showing results for: " + sanitizedQuery);
+
+    // Clear the existing content of the resultsDiv
+    resultsDiv.innerHTML = '';
+
+    // Append the textNode to the resultsDiv
+    resultsDiv.appendChild(textNode);
+  }
+</script>
 </body>
 </html>
 {% endautoescape %}
