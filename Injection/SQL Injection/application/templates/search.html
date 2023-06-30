@@ -1,0 +1,66 @@
+{% autoescape false %}
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+  <title>Search Page</title>
+  <style>
+    .container {
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">My Website</a>
+      <!-- ... rest of the navigation bar code ... -->
+    </div>
+  </nav>
+  
+  <div class="container">
+    <h1>Welcome to our directory Page</h1>
+
+    <div class="row">
+      <div class="col-md-6">
+        <h2>Search</h2>
+        <form method="POST" action="/search">
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="search-input" name="query">
+            <button class="btn btn-primary" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <h2>Search Results</h2>
+    <div id="search-results">
+      {% if results %}
+        {% for result in results %}
+          <div class="result-item">
+            <h3>{{ result.name }}</h3>
+            <p>{{ result.email }}</p>
+            <p>{{ result.message }}</p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No results found for: {{ query }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    function search() {
+      var query = document.getElementById("search-input").value;
+      var resultsDiv = document.getElementById("search-results");
+
+      // Dynamically generate JavaScript code
+      var scriptTag = document.createElement("script");
+      scriptTag.textContent = 'alert("This is dynamically generated JavaScript code!");';
+      resultsDiv.appendChild(scriptTag);
+    }
+  </script>
+</body>
+</html>
+{% endautoescape %}
