@@ -12,3 +12,10 @@ CREATE TABLE IF NOT EXISTS users (
 
 INSERT INTO users (name, email, password, role)
 VALUES ('Admin', 'Admin@hackme.com', 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', 'admin');
+
+CREATE TABLE IF NOT EXISTS submissions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    message TEXT
+);
